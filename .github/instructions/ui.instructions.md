@@ -20,6 +20,13 @@ Refer to technology-specific instruction files:
 
 ## Core Principles
 
+### Comments and API Documentation
+
+- Write comments to explain **why**: design intent, constraints, trade-offs, or accessibility behavior that is not apparent from the markup.
+- Avoid comments that restate HTML, Tailwind classes, or straightforward control flow. If the implementation needs that much explanation, improve the naming or structure instead.
+- Keep comments current with the component. Update or delete stale comments whenever the related UI changes.
+- Every reusable Astro component must document its `Props` interface so callers can understand the component contract without reading the implementation.
+
 ### Testability
 
 - Every interactive element MUST include a `data-testid` attribute

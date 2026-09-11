@@ -32,6 +32,24 @@ const games = await getAllGames(getDatabase());
 </Layout>
 ```
 
+## Component contracts and comments
+
+- Every reusable component and layout must declare a `Props` interface in frontmatter. Treat it as the public component API.
+- Document each non-obvious prop with a concise TSDoc comment that explains its purpose, accepted values, and default or optional behavior. Document inherited HTML attributes when the component narrows or changes their meaning.
+- Comments should explain intent, accessibility constraints, or other decisions that are not evident from the markup. Do not comment obvious element or class names.
+- Keep component contract comments synchronized with the rendered markup and defaults.
+
+```astro
+---
+interface Props {
+  /** Heading shown above the optional supporting text. */
+  title: string;
+  /** Supporting copy; omitted when the hero has no subtitle. */
+  subtitle?: string;
+}
+---
+```
+
 ## Layouts
 
 - Create reusable layout components in `src/layouts/`
@@ -109,8 +127,10 @@ There is no Svelte/React layer. When a page genuinely needs client behaviour, ad
 ## TypeScript
 
 - Use TypeScript for type-safe props
-- Define `Props` interface in frontmatter
+- Define and document a `Props` interface in frontmatter for every reusable component and layout
 - Type component imports and helper return values
+- Use four spaces for frontmatter indentation, single quotes, and trailing commas in multiline structures; preserve the surrounding file's established format
+- ESLint applies the recommended Astro and TypeScript rules, including unused-variable checks. Run `npm run lint` through the `quality-checks` skill after frontend changes.
 - Run `npx astro sync` to (re)generate route/content types before linting or type-checking
 - `.astro` files are type-checked by `npm run typecheck:astro` (which runs `astro sync` then `astro check`), on the classic `typescript` package. The pure TypeScript in `db/`, `src/lib/`, and `src/types/` is type-checked separately by `npm run typecheck` (the native TS 7 compiler, `tsgo`), which does **not** process `.astro` files.
 
