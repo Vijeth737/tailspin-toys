@@ -55,6 +55,25 @@ export async function getAllGameIds(db: Database): Promise<number[]> {
 - Map raw rows to the app-facing `Game`/`Publisher`/`Category` types in one place; don't leak Drizzle row shapes into components.
 - Keep ordering/lookup logic in `games.ts`, not in pages.
 
+## Comments and exported API documentation
+
+- Comments explain intent, invariants, constraints, or a non-obvious trade-off; they must not paraphrase a query, assignment, or control-flow statement.
+- Every exported function in `db/**/*.ts` and `src/lib/*.ts` requires a TSDoc/JSDoc block immediately above its declaration. Describe the function's purpose, each parameter (including the injectable `db` argument), and the returned value.
+- Use `@param` and `@returns` tags when they make the contract clearer. Keep the wording focused on behavior and caller expectations rather than implementation steps.
+- Update or remove stale comments whenever the related schema, query, transform, or return shape changes.
+
+```ts
+/**
+ * Returns games in title order so generated pages are reproducible.
+ *
+ * @param db Drizzle client used for the real database or an in-memory test database.
+ * @returns App-facing game records with their optional publisher and category.
+ */
+export async function getAllGames(db: Database): Promise<Game[]> {
+  // Query implementation...
+}
+```
+
 ## Determinism
 
 Seed-derived values must be reproducible across builds. Derive star ratings from a stable hash of the title (`ratingFromTitle`) — **never** `Math.random()`.
@@ -70,3 +89,9 @@ Node.js 22.13 or later is required because the data layer uses the built-in `nod
 ## Type checking
 
 The data layer (`db/**/*.ts`, `src/lib/*.ts`) is type-checked by `npm run typecheck`, which runs the native **TypeScript 7** compiler (`tsgo`, from `@typescript/native-preview`) against `tsconfig.tsgo.json`. Keep helpers exported with explicit parameter and return types so `tsgo` can verify them. Linting is unaffected — ESLint + `typescript-eslint` still run on the classic `typescript` package.
+
+## TypeScript formatting
+
+- Use four spaces for indentation, single quotes, trailing commas in multiline structures, and explicit parameter and return types for exported functions.
+- Preserve the established formatting in a file when extending it; do not reformat unrelated code.
+- ESLint's recommended TypeScript rules and `@typescript-eslint/no-unused-vars` are the automated baseline. Run `npm run lint` through the `quality-checks` skill; use type-checking for annotations and exported contracts.
